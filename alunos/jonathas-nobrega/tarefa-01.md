@@ -73,55 +73,46 @@ Esse processo é dividido em etapas chamadas de **Formas Normais (FNs)**, cada u
 
 ---
 
-## 📋 Exemplo prático: Normalização até a 2ª Forma Normal (2FN)
+## 📋 Exemplo prático: Normalização (1ª Forma Normal - 1FN)
 
-### ❌ Exemplo de tabela mal estruturada (violando a 2FN):
+### ❌ Exemplo de violação da 1ª Forma Normal (1FN) – Dados multivalorados
 
-Neste exemplo, a tabela armazena os produtos de um pedido, mas os campos `nome_produto` e `preço_unitário` dependem apenas de `produto_id`, não da chave composta inteira (`pedido_id + produto_id`):
+Suponha que temos uma tabela de clientes onde, na mesma célula, estão armazenados vários telefones de um mesmo cliente (o que viola a 1FN, que exige que cada campo armazene apenas um valor por vez):
 
-| pedido_id | produto_id | nome_produto | preço_unitário |
-| --------- | ---------- | ------------ | -------------- |
-| 101       | 10         | Teclado      | 150.00         |
-| 101       | 11         | Mouse        | 80.00          |
-| 102       | 10         | Teclado      | 150.00         |
-
-**Problema:**  
-Se o preço do produto mudar, será necessário alterar em vários lugares, gerando risco de inconsistência.
+| cliente_id | nome        | telefones                    |
+| ---------- | ----------- | ---------------------------- |
+| 1          | Ana Silva   | (11)1234-5678, (11)9876-5432 |
+| 2          | Bruno Costa | (21)2468-1357                |
 
 ---
 
-### ✅ Aplicando a 2FN (Segunda Forma Normal):
+### ✅ Aplicando a 1FN (Primeira Forma Normal):
 
-**Solução:**  
-Separar os dados dependentes em duas tabelas:
+Para corrigir, devemos criar uma **tabela separada para os telefones**, garantindo que cada valor fique em sua própria linha:
 
-### Tabela: pedidos_produtos
+#### Tabela: clientes
 
-Esta tabela representa o relacionamento entre pedidos e produtos:
+| cliente_id | nome        |
+| ---------- | ----------- |
+| 1          | Ana Silva   |
+| 2          | Bruno Costa |
 
-| pedido_id | produto_id |
-| --------- | ---------- |
-| 101       | 10         |
-| 101       | 11         |
-| 102       | 10         |
+#### Tabela: clientes_telefones
 
-### Tabela: produtos
-
-Esta tabela armazena os dados fixos de cada produto:
-
-| produto_id | nome_produto | preço_unitário |
-| ---------- | ------------ | -------------- |
-| 10         | Teclado      | 150.00         |
-| 11         | Mouse        | 80.00          |
+| telefone_id | cliente_id | telefone      |
+| ----------- | ---------- | ------------- |
+| 1           | 1          | (11)1234-5678 |
+| 2           | 1          | (11)9876-5432 |
+| 3           | 2          | (21)2468-1357 |
 
 ---
 
-## ✅ Benefícios da Normalização
+## ✅ Benefícios da Normalização nesse caso:
 
-- **Menor redundância de dados**
-- **Facilidade de manutenção**
-- **Maior consistência**
-- **Evita anomalias de inserção, exclusão e atualização**
+- **Eliminação de dados multivalorados**
+- **Facilidade de consulta por telefone**
+- **Melhor integridade referencial**
+- **Melhor manutenção dos dados**
 
 ---
 
